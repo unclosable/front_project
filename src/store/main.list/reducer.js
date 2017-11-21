@@ -3,9 +3,6 @@ import {
   SHOW,
   RESETCOLOR
 } from './actions.jsx'
-import {
-  combineReducers
-} from 'redux'
 
 function addMenu(state = [], action) {
   switch (action.type) {
@@ -18,7 +15,9 @@ function addMenu(state = [], action) {
   }
 }
 
-function showMenu(state = { show: false }, action) {
+function showMenu(state = {
+  show: false
+}, action) {
   switch (action.type) {
     case SHOW:
       {
@@ -41,8 +40,8 @@ function setColor(state = '#B71C1C', action) {
   }
 }
 
-export default combineReducers({
+export default {
   addMenu,
   showMenu,
   setColor
-})
+}

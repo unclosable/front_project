@@ -2,6 +2,18 @@ import MainPanel from '../main.panel.jsx'
 import TextField from 'material-ui/TextField';
 import Slider from 'material-ui/Slider';
 import Subheader from 'material-ui/Subheader';
+import IconButton from 'material-ui/IconButton';
+import Send from 'material-ui/svg-icons/content/send';
+import {
+  post
+} from '../../utils/http';
+import {
+  addLoading,
+  loaded
+} from '../../store/main.line/actions.js'
+import {
+  connect
+} from 'react-redux'
 
 
 const min = 10000;
@@ -15,7 +27,10 @@ class Offer extends React.Component {
       position: '',
       monthPay: '21000',
       aliPay: '',
-      contact: ''
+      contact: '',
+      message: '',
+      loaded: props.loaded,
+      loading: props.loading
     }
   }
   render() {
@@ -37,6 +52,9 @@ class Offer extends React.Component {
         <TextField hintText="E-mail/PHONE ..." floatingLabelText="联系方式" multiLine={true}
           value={this.state.contact} onChange={(e,value)=>{this._valueChange(value,'contact')}}/>
         <br />
+        <IconButton className='offerSub' iconStyle={{ color:'#00BCD4'}} onClick={()=>{this._fetchOffer()}}>
+          <Send/>
+        </IconButton>
       </div>
     </MainPanel>;
   }
@@ -47,7 +65,38 @@ class Offer extends React.Component {
   }
   _sliderChange(value) {
     const pay = (max - min) * value + min;
-    this.setState({ monthPay: pay + '' })
+    this.setState({
+      monthPay: pay + ''
+    })
+  }
+  _fetchOffer() {
+    post('//192.168.1.153:10002/offer/post', this.state).then((response) => {
+      console.log(response);
+    }, (e) => {
+      console.log(e);
+    })
+    console.log(this.state)
   }
 }
-export default Offer;
+
+
+const mapStateToProps = (state) => {
+  return {}
+}
+
+
+const mapDispatchToProps = (
+  dispatch,
+  ownProps
+) => {
+  return {
+    loading: (uuid) => {
+      dispatch(addLoading(uuid));
+    },
+    loaded: (uuid) => {
+      dispatch(loaded(uuid));
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Offer);

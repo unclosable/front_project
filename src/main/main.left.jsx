@@ -54,7 +54,11 @@ class LeftBar extends React.Component {
     this._contributeIcon();
   }
   render() {
-    const { showMenu, hideMenu, setMenu } = this.props
+    const {
+      showMenu,
+      hideMenu,
+      setMenu
+    } = this.props
     const color = this.state.color;
     const iconStyle = {
       color: color
@@ -70,6 +74,7 @@ class LeftBar extends React.Component {
             onRequestChange={(show)=>setMenu(show)}>
         <div className=" hiddenOvweflow">
         <List className="leftTopMenu">
+          <ListItem primaryText="日志"  leftIcon={<ContentInbox />}/>
           <LinkedListItem to="/test1" leftIcon={<ContentInbox />}  onClick={()=>{hideMenu()}}/>
           <LinkedListItem to="/main" leftIcon={<ContentInbox />}  onClick={()=>{hideMenu()}}/>
           { this.props.menus.map(name=>
@@ -104,7 +109,9 @@ class LeftBar extends React.Component {
         color: c
       })
     }
-    thiz.setState({ intervalID: setInterval(interval, 500) })
+    thiz.setState({
+      intervalID: setInterval(interval, 500)
+    })
   }
 }
 

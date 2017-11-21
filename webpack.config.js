@@ -7,14 +7,14 @@ const ExtraBabelPlugins = require('babel-plugin-import');
 
 const config = configFunc(process.env.NODE_ENV);
 
-const entry = config.DEV ? ["webpack-dev-server/client?http://localhost:8080/", "webpack/hot/only-dev-server", __dirname + "/index.js"] :
+const entry = config.DEV ? ["webpack-dev-server/client?http://192.168.1.197:4000/", "webpack/hot/only-dev-server", __dirname + "/index.js"] :
   ("webpack/hot/only-dev-server", __dirname + "/index.js")
 
 module.exports = {
   entry: entry, //已多次提及的唯一入口文件
   output: {
     path: __dirname + "/build", //打包后的文件存放的地方
-    filename: "bundle.js" //打包后输出文件的文件名
+    filename: "bundle.js", //打包后输出文件的文件名
   },
   module: {
     loaders: [{
@@ -54,9 +54,12 @@ module.exports = {
     }), new ExtractTextPlugin("styles.css")
   ],
   devServer: {
+    host: '0.0.0.0',
+    port: 4000,
     contentBase: "./", //本地服务器所加载的页面所在的目录
     historyApiFallback: true, //不跳转
     // colors: true,
-    inline: true //实时刷新
+    inline: true, //实时刷新
+    hot: true
   }
 }

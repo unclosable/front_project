@@ -1,4 +1,5 @@
 import LeftBar from './main/main.left.jsx';
+import MainTopLinearProgress from './main/main.line.jsx';
 import Hello from './component/helloPanel/index.jsx'
 import ContributePanel from './component/contributePanel/index.jsx'
 import Offer from './component/offerPanel/index.jsx'
@@ -10,7 +11,7 @@ import {
 import {
   createStore
 } from 'redux';
-import menuStore from './store/main.list/reducer.jsx'
+import menuStore from './store/reducer.js'
 import {
   BrowserRouter as Router,
   Route,
@@ -25,6 +26,7 @@ class App extends React.Component {
               <MuiThemeProvider>
               <div className="main">
                 <LeftBar/>
+                 <MainTopLinearProgress/>
                   <Route exact path='/' component={Hello}/>
                   <Route path='/test1' component={Test1}/>
                   <Route path='/contribute' component={ContributePanel}/>
