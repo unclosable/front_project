@@ -3,6 +3,7 @@ import MainTopLinearProgress from './main/main.line.jsx';
 import Hello from './component/helloPanel/index.jsx'
 import ContributePanel from './component/contributePanel/index.jsx'
 import Offer from './component/offerPanel/index.jsx'
+import Sort from './component/sortPanel/index.jsx';
 import Test1 from './component/test1.jsx'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import {
@@ -29,6 +30,7 @@ class App extends React.Component {
                  <MainTopLinearProgress/>
                   <Route exact path='/' component={Hello}/>
                   <Route path='/test1' component={Test1}/>
+                  <Route path='/sort' component={Sort}/>
                   <Route path='/contribute' component={ContributePanel}/>
                   <Route path='/offer' component={Offer}/>
                 </div>

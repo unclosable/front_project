@@ -26,7 +26,7 @@ class Offer extends React.Component {
       compment: '',
       position: '',
       monthPay: '21000',
-      aliPay: '',
+      alipay: '',
       contact: '',
       message: '',
       loaded: props.loaded,
@@ -47,7 +47,7 @@ class Offer extends React.Component {
           disabled={true} value={this.state.monthPay}/>
         <br />
         <TextField hintText="谢谢老板(｡･ω･｡)" floatingLabelText="捐款交易号" multiLine={true}
-          value={this.state.aliPay} onChange={(e,value)=>{this._valueChange(value,'aliPay')}}/>
+          value={this.state.alipay} onChange={(e,value)=>{this._valueChange(value,'alipay')}}/>
         <br />
         <TextField hintText="E-mail/PHONE ..." floatingLabelText="联系方式" multiLine={true}
           value={this.state.contact} onChange={(e,value)=>{this._valueChange(value,'contact')}}/>
@@ -70,7 +70,7 @@ class Offer extends React.Component {
     })
   }
   _fetchOffer() {
-    post('//192.168.1.153:10002/offer/post', this.state).then((response) => {
+    post('//127.0.0.1:10002/offer/post', this.state).then((response) => {
       console.log(response);
     }, (e) => {
       console.log(e);

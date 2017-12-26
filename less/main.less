@@ -117,3 +117,66 @@ body
     position: absolute !important;
     left: 120%;
 }
+.sort-div
+{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+
+    display: flex;
+
+    width: 900px;
+    height: 400px;
+
+    transform: translate(-50%, -50%);
+
+    background-color: #4c8bf5;
+    .sort-item
+    {
+        position: relative;
+
+        flex: 1;
+
+        height: 100%;
+
+        border: 1px solid #ddd ;
+        &.act
+        {
+            background-color: #ffa500;
+        }
+        .top
+        {
+            position: relative;
+
+            background-color: #98b8b7;
+            .front
+            {
+                position: absolute;
+                bottom: 0;
+
+                width: 100%;
+
+                text-align: center;
+            }
+        }
+    };
+}
+.sort-sub
+{
+    position: absolute !important;
+    bottom: 10%;
+    left: 40%;
+}
+
+.sort-reset
+{
+    position: absolute !important;
+    bottom: 10%;
+    left: 60%;
+}
+.sort-card
+{
+    position: fixed;
+    top: 100px;
+    left: 100px;
+}

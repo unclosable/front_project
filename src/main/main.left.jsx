@@ -24,8 +24,12 @@ import IconButton from 'material-ui/IconButton';
 
 class LinkedListItem extends React.Component {
   render() {
+    let text = 'Inbox';
+    if (this.props.text) {
+      text = this.props.text;
+    };
     return <Link to={this.props.to}>
-        <ListItem primaryText="Inbox" leftIcon={<ContentInbox />} onClick={this.props.onClick} />
+        <ListItem primaryText={text} leftIcon={<ContentInbox />} onClick={this.props.onClick} />
     </Link>
   }
 }
@@ -77,6 +81,7 @@ class LeftBar extends React.Component {
           <ListItem primaryText="日志"  leftIcon={<ContentInbox />}/>
           <LinkedListItem to="/test1" leftIcon={<ContentInbox />}  onClick={()=>{hideMenu()}}/>
           <LinkedListItem to="/main" leftIcon={<ContentInbox />}  onClick={()=>{hideMenu()}}/>
+          <LinkedListItem to="/sort" text="排序测试" leftIcon={<ContentInbox />}  onClick={()=>{hideMenu()}}/>
           { this.props.menus.map(name=>
             <ListItem primaryText={name} leftIcon={<ContentInbox />}  onClick={()=>{hideMenu()}}/>
           ) }
