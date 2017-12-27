@@ -119,16 +119,11 @@ body
 }
 .sort-div
 {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-
     display: flex;
 
     width: 900px;
     height: 400px;
-
-    transform: translate(-50%, -50%);
+    margin: 20px;
 
     background-color: #4c8bf5;
     .sort-item
@@ -143,6 +138,10 @@ body
         &.act
         {
             background-color: #ffa500;
+        }
+        &.forcus
+        {
+            background-color: #cf000c;
         }
         .top
         {
@@ -163,20 +162,26 @@ body
 }
 .sort-sub
 {
-    position: absolute !important;
+    // position: absolute !important;
     bottom: 10%;
-    left: 40%;
+    left: 10%;
 }
 
 .sort-reset
 {
-    position: absolute !important;
+    // position: absolute !important;
     bottom: 10%;
-    left: 60%;
+    left: 20%;
 }
-.sort-card
+.sort-card1
 {
     position: fixed;
     top: 100px;
+    left: 100px;
+}
+.sort-card2
+{
+    position: fixed;
+    top: 300px;
     left: 100px;
 }
