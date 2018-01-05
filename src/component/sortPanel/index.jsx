@@ -18,9 +18,12 @@ import {
   connect
 } from 'react-redux'
 
+import StepFunc from '../../utils/step.js';
+
 const bubble_sort = 'Bubble Sort';
 const simple_selection_sort = 'Simple Selection Sort';
 const double_selection_sort = 'Double Selection Sort';
+const insertion_sort = 'Insertion Sort';
 
 const getSortType = (type) => {
 
@@ -34,6 +37,9 @@ const getSortType = (type) => {
       break;
     case double_selection_sort:
       sort_type = '双选择排序'
+      break;
+    case insertion_sort:
+      sort_type = '插入排序'
       break;
     default:
       sort_type = '冒泡排序'
@@ -129,6 +135,7 @@ class Sort extends React.Component {
             <FlatButton label="冒泡排序" backgroundColor="#D9EDF7" onClick={()=>{this.setState({sort_type:bubble_sort})}}/>
             <FlatButton label="简单选择排序" backgroundColor="#66AFE9" onClick={()=>{this.setState({sort_type:simple_selection_sort})}}/>
             <FlatButton label="双选择排序" backgroundColor="#00BCD4" onClick={()=>{this.setState({sort_type:double_selection_sort})}}/>
+            <FlatButton label="插入排序" backgroundColor="#FFA500" onClick={()=>{this.setState({sort_type:insertion_sort})}}/>
           </CardActions>
           <div className='sort-div'>
               {this.state.list.map((k)=><SortItem key={k.num} num={k.num} act={k.act} forcus={k.forcus}/>)}
@@ -172,10 +179,80 @@ class Sort extends React.Component {
       case double_selection_sort:
         this._double_selection_sort();
         break;
+      case insertion_sort:
+        this._insertion_sort();
+        break;
+
       default:
         this._bubble_sort(thiz);
         break;
     }
+  }
+  //插入排序
+  _insertion_sort() {
+    const thiz = this;
+    thiz.setState({
+      runable: false
+    })
+    const list = this.state.list;
+    const actFunc = (index, finalAct) => {
+      upCheckNum();
+      stepAct(() => {
+        list[index].forcus = true;
+        up(list);
+      }, () => {
+        if (list[index].num > list[index - 1].num) {
+          let j = index;
+          let temp = list[j];
+          stepAct(() => {
+            list[j - 1].act = true;
+            up(list);
+          }, () => {
+            // if (list[j])
+          }, 10);
+        }
+      }, () => {
+        list[index].forcus = false;
+        up(list);
+      }, 50, finalAct);
+
+    }
+    for (let i = 1; i < list.length; i++) {
+      if (list[i - 1].num < list[i].num) {
+        let temp = list[i];
+        let j = i;
+        while (j > 0 && list[j - 1].num < temp.num) {
+          list[j] = list[j - 1];
+          j--;
+        }
+        list[j] = temp;
+      }
+    }
+    up(list);
+    let i = 1;
+    let j = i;
+    const selectAct = (index) => {
+      list[i - 1].act = true;
+      up(list);
+    }
+    // let si = setInterval(() => {
+    //   selectAct();
+    //   actFunc(j--, () => {
+    //     if (j == list.length - i - 1) {
+    //       resetAct();
+    //       ++i;
+    //       max = i;
+    //       min = list.length - 1 - i;
+    //       j = i + 1;
+    //     }
+    //     if (i == list.length / 2) {
+    //       clearInterval(si);
+    //       thiz.setState({
+    //         runable: true
+    //       })
+    //     }
+    //   });
+    // }, 181);
   }
   //双选择排序
   _double_selection_sort() {
@@ -184,40 +261,6 @@ class Sort extends React.Component {
       runable: false
     })
     const list = this.state.list;
-    const up = (list) => {
-      thiz.setState({
-        list: list
-      })
-    }
-    const upC = () => {
-      let c = thiz.state.changeNum;
-      thiz.setState({
-        changeNum: c + 1
-      })
-    }
-    const upCheckNum = () => {
-      let c = thiz.state.checkNum;
-      thiz.setState({
-        checkNum: c + 1
-      })
-    }
-
-    const stepAct = (select, check, reset, stepTime, finalAct) => {
-      const selectRecall = () => {
-        select();
-        setTimeout(checkRecall, stepTime)
-      }
-      const checkRecall = () => {
-        check();
-        setTimeout(resetRecall, stepTime)
-      }
-      const resetRecall = () => {
-        reset();
-        finalAct();
-      }
-      setTimeout(selectRecall, stepTime)
-    }
-
     let i = 0,
       j = 1;
     let max = i;
@@ -230,10 +273,10 @@ class Sort extends React.Component {
         list[max] = list[min];
         list[min] = temp;
       }
-      up(list);
+      thiz.__upList(list);
     }
     const resetAct = (index) => {
-      upC();
+      thiz.__upChangeNum();
       list[i].act = false;
       list[list.length - 1 - i].act = false;
       list[max].act = false;
@@ -244,33 +287,33 @@ class Sort extends React.Component {
       temp = list[list.length - 1 - i];
       list[list.length - 1 - i] = list[min];
       list[min] = temp;
-      up(list);
+      thiz.__upList(list);
     }
 
     const actFunc = (index, finalAct) => {
-      upCheckNum();
-      stepAct(() => {
+      thiz.__upCheckNum();
+      StepFunc(35, finalAct, () => {
         list[index].forcus = true;
-        up(list);
+        thiz.__upList(list);
       }, () => {
         if (list[index].num > list[max].num) {
           if (max != i)
             list[max].act = false;
           max = index;
           list[max].act = true;
-          up(list);
+          thiz.__upList(list);
         }
         if (list[index].num < list[min].num) {
           if (min != list.length - 1 - i)
             list[min].act = false;
           min = index;
           list[min].act = true;
-          up(list);
+          thiz.__upList(list);
         }
       }, () => {
         list[index].forcus = false;
-        up(list);
-      }, 50, finalAct);
+        thiz.__upList(list);
+      })();
 
     }
 
@@ -302,75 +345,40 @@ class Sort extends React.Component {
       runable: false
     })
     const list = this.state.list;
-    const up = (list) => {
-      thiz.setState({
-        list: list
-      })
-    }
-    const upC = () => {
-      let c = thiz.state.changeNum;
-      thiz.setState({
-        changeNum: c + 1
-      })
-    }
-    const upCheckNum = () => {
-      let c = thiz.state.checkNum;
-      thiz.setState({
-        checkNum: c + 1
-      })
-    }
-
-    const stepAct = (select, check, reset, stepTime, finalAct) => {
-      const selectRecall = () => {
-        select();
-        setTimeout(checkRecall, stepTime)
-      }
-      const checkRecall = () => {
-        check();
-        setTimeout(resetRecall, stepTime)
-      }
-      const resetRecall = () => {
-        reset();
-        finalAct();
-      }
-      setTimeout(selectRecall, stepTime)
-    }
-
     let i = 0,
       j = 1;
     let max = i;
     const selectAct = (index) => {
       list[index].act = true;
-      up(list);
+      thiz.__upList(list);
     }
     const resetAct = (index) => {
-      upC();
+      thiz.__upChangeNum();
       list[index].act = false;
       list[max].act = false;
       let temp = list[index];
       list[index] = list[max];
       list[max] = temp;
-      up(list);
+      thiz.__upList(list);
     }
 
     const actFunc = (index, finalAct) => {
-      upCheckNum();
-      stepAct(() => {
+      thiz.__upCheckNum();
+      StepFunc(40, finalAct, () => {
         list[index].forcus = true;
-        up(list);
+        thiz.__upList(list);
       }, () => {
         if (list[index].num > list[max].num) {
           if (max != i)
             list[max].act = false;
           max = index;
           list[max].act = true;
-          up(list);
+          thiz.__upList(list);
         }
       }, () => {
         list[index].forcus = false;
-        up(list);
-      }, 60, finalAct);
-
+        thiz.__upList(list);
+      })();
     }
 
     let si = setInterval(() => {
@@ -400,55 +408,25 @@ class Sort extends React.Component {
       runable: false
     })
     const list = this.state.list;
-    const up = (list) => {
-      thiz.setState({
-        list: list
-      })
-    }
-    const upC = () => {
-      let c = thiz.state.changeNum;
-      thiz.setState({
-        changeNum: c + 1
-      })
-    }
-    const upCheckNum = () => {
-      let c = thiz.state.checkNum;
-      thiz.setState({
-        checkNum: c + 1
-      })
-    }
-
-    const stepAct = (select, check, reset, stepTime) => {
-      const selectRecall = () => {
-        select();
-        setTimeout(checkRecall, stepTime)
-      }
-      const checkRecall = () => {
-        check();
-        setTimeout(reset, stepTime)
-      }
-      setTimeout(selectRecall, stepTime)
-    }
-
     const actFunc = (j) => {
-      upCheckNum();
-      stepAct(() => {
+      thiz.__upCheckNum();
+      StepFunc(50, null, () => {
         list[j].act = true;
         list[j + 1].act = true;
-        up(list);
+        thiz.__upList(list);
       }, () => {
         if (list[j].num < list[j + 1].num) {
           let temp = list[j];
           list[j] = list[j + 1];
           list[j + 1] = temp
-          upC();
-          up(list);
+          thiz.__upChangeNum();
+          thiz.__upList(list);
         }
       }, () => {
         list[j].act = false;
         list[j + 1].act = false;
-        up(list);
-      }, 50);
+        thiz.__upList(list);
+      })();
     }
 
     let i = 0,
@@ -466,6 +444,26 @@ class Sort extends React.Component {
         })
       }
     }, 160);
+  }
+  //更新LIST
+  __upList(list) {
+    this.setState({
+      list: list
+    })
+  }
+  //自增交换次数
+  __upChangeNum() {
+    let c = this.state.changeNum;
+    this.setState({
+      changeNum: c + 1
+    })
+  }
+  //自增比较次数
+  __upCheckNum() {
+    let c = this.state.checkNum;
+    this.setState({
+      checkNum: c + 1
+    })
   }
 }
 
