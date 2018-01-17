@@ -7,8 +7,16 @@ const ExtraBabelPlugins = require('babel-plugin-import');
 
 const config = configFunc(process.env.NODE_ENV);
 
-const entry = config.DEV ? ["webpack-dev-server/client?http://192.168.1.197:4000/", "webpack/hot/only-dev-server", __dirname + "/index.js"] :
-  ("webpack/hot/only-dev-server", __dirname + "/index.js")
+const entry = ("webpack/hot/only-dev-server", __dirname + "/index.js")
+
+const plugins = config.DEV
+  ? []
+  : [new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      },
+      sourceMap: true
+    })];
 
 module.exports = {
   entry: entry, //已多次提及的唯一入口文件
@@ -17,41 +25,47 @@ module.exports = {
     filename: "bundle.js", //打包后输出文件的文件名
   },
   module: {
-    loaders: [{
-      //js+jsx
-      test: /\.jsx?$/,
-      loader: 'babel-loader',
-      query: {
-        presets: ['react', 'es2015'],
-        plugins: [
-          ["import", {
-            "libraryName": "antd",
-            "style": true
-          }]
-        ]
+    loaders: [
+      {
+        //js+jsx
+        test: /\.jsx?$/,
+        loader: 'babel-loader',
+        query: {
+          presets: [
+            'react', 'es2015'
+          ],
+          plugins: [
+            [
+              "import", {
+                "libraryName": "antd",
+                "style": true
+              }
+            ]
+          ]
+        }
+      }, {
+        //less
+        test: /\.less$/,
+        loader: 'style-loader!css-loader!less-loader'
+      }, {
+        //css
+        test: /\.css$/,
+        loader: 'style-loader!css-loader'
       }
-    }, {
-      //less
-      test: /\.less$/,
-      loader: 'style-loader!css-loader!less-loader'
-    }, {
-      //css
-      test: /\.css$/,
-      loader: 'style-loader!css-loader'
-    }]
+    ]
   },
-  plugins: [new webpack.HotModuleReplacementPlugin(),
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'index.html',
+      filename: 'index.html', template: 'index.html',
       //favicon: resolveApp('scorpio-face.ico'),
       inject: true,
       path: config.JS_PATH
     }),
-    new webpack.ProvidePlugin({
-      React: "react",
-      react_dom: "react-dom"
-    }), new ExtractTextPlugin("styles.css")
+    new webpack.ProvidePlugin({React: "react", react_dom: "react-dom"}),
+    new webpack.DefinePlugin({config: JSON.stringify(config)}),
+    new ExtractTextPlugin("styles.css"),
+    ...plugins
   ],
   devServer: {
     host: '0.0.0.0',

@@ -14,7 +14,7 @@ import {
 import {
   connect
 } from 'react-redux'
-
+import { Redirect } from 'react-router-dom';
 
 const min = 10000;
 const max = 32000;
@@ -23,6 +23,7 @@ class Offer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      redirect: false,
       compment: '',
       position: '',
       monthPay: '21000',
@@ -34,6 +35,9 @@ class Offer extends React.Component {
     }
   }
   render() {
+    if (this.state.redirect) {
+      return <Redirect push to="/" />
+    }
     return <MainPanel>
       <div className='middleDiv'>
         <Slider className='offerSlider' axis="y" defaultValue={0.5} onChange={(e,v)=>{this._sliderChange(v)}}/>
@@ -70,12 +74,18 @@ class Offer extends React.Component {
     })
   }
   _fetchOffer() {
-    post('//127.0.0.1:10002/offer/post', this.state).then((response) => {
-      console.log(response);
-    }, (e) => {
+    const thiz = this;
+    post('/offer/post', thiz.state).then((response) => {
+      return response.json();
+    }).catch((e) => {
       console.log(e);
-    })
-    console.log(this.state)
+    }).then((obj) => {
+      if (obj.reCode == 200) {
+        thiz.setState({
+          redirect: true
+        });
+      }
+    });
   }
 }
 
