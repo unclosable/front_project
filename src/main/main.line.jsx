@@ -1,22 +1,23 @@
-import LinearProgress from 'material-ui/LinearProgress';
+import CircularProgress from 'material-ui/CircularProgress';
 import uuid from '../utils/uuid.js'
 import {
   connect
 } from 'react-redux'
 
 class MainTopLinearProgress extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      uuids: props.uuids
-    }
-  }
-
-  _getMode() {
-    return this.state.uuids.length == 0 ? 'determinate' : 'indeterminate'
+  _getMode(uuids) {
+    return uuids.length == 0
   }
   render() {
-    return <LinearProgress mode={this._getMode()} />
+    const { uuids } = this.props;
+    if (this._getMode(uuids))
+      return <div></div>
+    else
+      return <CircularProgress style={{
+          position: 'absolute',
+          right:1,
+          top:1
+        }} size={40} thickness={1} />
   }
 }
 

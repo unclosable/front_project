@@ -16,7 +16,8 @@ import menuStore from './store/reducer.js'
 import {
   BrowserRouter as Router,
   Route,
-  Link
+  Link,
+  Switch
 } from 'react-router-dom'
 const store = createStore(menuStore);
 
@@ -28,11 +29,13 @@ class App extends React.Component {
               <div className="main">
                 <LeftBar/>
                  <MainTopLinearProgress/>
-                  <Route exact path='/' component={Hello}/>
-                  <Route path='/test1' component={Test1}/>
-                  <Route path='/sort' component={Sort}/>
-                  <Route path='/contribute' component={ContributePanel}/>
-                  <Route path='/offer' component={Offer}/>
+                 <Switch>
+                    <Route exact path='/' component={Hello}/>
+                    <Route path='/test1' component={Test1}/>
+                    <Route path='/sort' component={Sort}/>
+                    <Route path='/contribute' component={ContributePanel}/>
+                    <Route path='/offer' component={Offer}/>
+                  </Switch>
                 </div>
               </MuiThemeProvider>
             </Router>

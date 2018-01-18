@@ -15,6 +15,8 @@ import {
   connect
 } from 'react-redux'
 import { Redirect } from 'react-router-dom';
+import Snackbar from 'material-ui/Snackbar';
+import uuid from '../../utils/uuid'
 
 const min = 10000;
 const max = 32000;
@@ -24,6 +26,9 @@ class Offer extends React.Component {
     super(props);
     this.state = {
       redirect: false,
+      snackbarOpen: false,
+      postUUID: '',
+      reMsg: '',
       compment: '',
       position: '',
       monthPay: '21000',
@@ -60,6 +65,12 @@ class Offer extends React.Component {
           <Send/>
         </IconButton>
       </div>
+      <Snackbar
+        open={this.state.snackbarOpen}
+        message={this.state.reMsg}
+        autoHideDuration={4000}
+        onRequestClose={()=>{this._handleRequestClose()}}
+      />
     </MainPanel>;
   }
   _valueChange(value, key) {
@@ -73,17 +84,35 @@ class Offer extends React.Component {
       monthPay: pay + ''
     })
   }
+  _handleRequestClose() {
+    this.state.loaded(this.state.postUUID);
+    this.setState({
+      redirect: true,
+      snackbarOpen: false,
+    });
+
+  }
   _fetchOffer() {
     const thiz = this;
+    const postUUID = uuid();
+    thiz.state.loading(postUUID);
+    thiz.setState({
+      postUUID: postUUID
+    })
     post('/offer/post', thiz.state).then((response) => {
       return response.json();
     }).catch((e) => {
-      console.log(e);
+      thiz.state.loaded(postUUID);
+      thiz.setState({
+        snackbarOpen: true,
+        reMsg: '发生了未知错误',
+      })
     }).then((obj) => {
       if (obj.reCode == 200) {
         thiz.setState({
-          redirect: true
-        });
+          snackbarOpen: true,
+          reMsg: obj.reMessage,
+        })
       }
     });
   }
