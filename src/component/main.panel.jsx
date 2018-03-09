@@ -8,12 +8,12 @@ export default class Main extends React.Component {
     const disBackHome = this.props.disBackHome;
     return <div className="main panel">
       {this.props.children}
-      {disBackHome?'':
-      <Link to='/' className="right-bottom">
-        <IconButton tooltip="BACK HOME PAGE" tooltipPosition="top-left">
-          <ActionHome />
-        </IconButton>
-      </Link>}
+      {disBackHome ? '' :
+        <Link to='/' className="right-bottom">
+          <IconButton tooltip="BACK HOME PAGE" tooltipPosition="top-left">
+            <ActionHome />
+          </IconButton>
+        </Link>}
     </div>
   }
 }
